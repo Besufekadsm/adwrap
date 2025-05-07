@@ -1,0 +1,62 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Workspace {
+  id        String      @id @default(uuid())
+  name      String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  mediaItems MediaItem[]
+}
+
+model MediaItem {
+  id            String    @id @default(uuid())
+  workspaceId   String
+  workspace     Workspace @relation(fields: [workspaceId], references: [id])
+  type          MediaType
+  workspaceMediaId String  // This will store BB-1, SP-1 etc.
+  name          String
+  location      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  staticMediaFaces StaticMediaFace[]
+  routes        Route[]
+
+  @@unique([workspaceId, workspaceMediaId])
+}
+
+model StaticMediaFace {
+  id          String    @id @default(uuid())
+  mediaItemId String
+  mediaItem   MediaItem @relation(fields: [mediaItemId], references: [id])
+  name        String
+  size        String?
+  orientation String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Route {
+  id          String    @id @default(uuid())
+  mediaItemId String
+  mediaItem   MediaItem @relation(fields: [mediaItemId], references: [id])
+  name        String
+  startPoint  String?
+  endPoint    String?
+  distance    Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum MediaType {
+  STATIC_BILLBOARD
+  STREET_POLE
+} 
