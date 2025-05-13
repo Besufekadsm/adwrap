@@ -1,120 +1,118 @@
-# adwrap-assessment  
-**Full-stack assessment for ADWrap** – build a media management system with support for **billboards** and **streetpoles**, scoped to unique workspaces. Includes sample data and expectations.
+# AdWrap - Media Management System
 
----
+A full-stack application for managing media items (Static Billboards and Street Poles) across workspaces.
 
-# ADWrap Media Management – Full-Stack Assessment
+## Features
 
-Welcome to the ADWrap technical assessment. This task is designed to evaluate your skills in full-stack development using real-world concepts from our platform.
+- Create and manage workspaces
+- Add media items (Static Billboards and Street Poles) to workspaces
+- Automatic custom ID generation for media items
+- Responsive design with dark mode support
+- Type-safe API with Zod validation
 
----
+## Tech Stack
 
-## 🧭 Summary of What You’ll Do
+### Frontend
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- ShadCN UI
+- React Hook Form
+- Zod
 
-- Use provided **mock data** as a reference.  
-- Create **media items** via backend logic.  
-- Ensure proper **workspace-scoped ID tracking**.  
-- Build a frontend for creating or displaying media items.
+### Backend
+- Node.js
+- Express.js
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- Zod
 
----
+## Prerequisites
 
-## 🎯 Objective
+- Node.js 18 or later
+- Docker and Docker Compose
+- PostgreSQL (if running locally)
 
-Build an API that allows users to create and manage **media items** (**static billboards** and **street poles**), ensuring that each workspace has its own independent ID and tracking logic.
+## Setup
 
----
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/adwrap.git
+cd adwrap
+```
 
-## 📐 What You'll Be Working With
+2. Create environment files:
+```bash
+# Backend
+cp backend/.env.example backend/.env
 
-Each **media item** can be:
-- A **Static Billboard** with multiple `staticMediaFaces`
-- A **Street Pole** with one or more `routes`
+# Frontend
+cp frontend/.env.example frontend/.env
+```
 
-Sample JSON data is included in `/mock-data/`:
-- **Media Items**
+3. Start the development environment:
+```bash
+docker-compose up --build
+```
 
-Each media item belongs to a **workspace**. Counts (e.g., IDs) should be **independent per workspace** — e.g., each workspace starts counting media items from `1`.
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:3001
+- PostgreSQL: localhost:5432
 
----
+## Development
 
-## 🧱 Backend Notes – Database Setup (Recommended)
+### Backend
 
-Using a database (e.g., **Postgres**), you can do the following:
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-- **Create tables** for:
-  - `mediaItems`
-  - `staticMediaFaces`
-  - `routes`
-  - `workspaces`
+### Frontend
 
-- Requirements:
-  - Media items must be scoped to a **workspace**.
-  - Each workspace should maintain its own count of media item IDs (`BB-1`, `SP-1`, etc.).
-  - API should support **nested creation**:
-    - Static media with `faces`
-    - Street poles with `routes`
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-> You can also seed your database with sample data or use mock JSON to simulate behavior.
+## Testing
 
----
+### Backend Tests
 
-## 💻 Frontend Task (Encouraged)
+```bash
+cd backend
+npm test
+```
 
-### 🎨 Figma Designs
+### Frontend Tests
 
-View the full design prototype here: [Figma Link](https://www.figma.com/design/5cvz0q0X4J4OombQ8hRwjr/Dev-Assessment?t=uMSJTFakAgEC6upl-0)  
+```bash
+cd frontend
+npm test
+```
 
-Please reference these screens when implementing the media feature.  
-⚠️ You may ignore extras like filters, pagination, or search on the media table if time is limited.
+## API Documentation
 
----
+### Workspaces
 
-### 🛠️ Media Selection UI
+- `GET /api/workspaces` - List all workspaces
+- `GET /api/workspaces/:id` - Get workspace by ID
+- `POST /api/workspaces` - Create new workspace
+- `PUT /api/workspaces/:id` - Update workspace
+- `DELETE /api/workspaces/:id` - Delete workspace
 
-- Display a list of media items in a **table format**
-- Each row should be **expandable** to show:
-  - `staticMediaFaces` (for static billboards)
-  - `routes` (for street poles)
+### Media Items
 
-Example behavior:
-- A static billboard media item will expand to show all its faces.
-- A street pole media item will expand to show all its routes.
+- `GET /api/media?workspace_id=1` - List media items by workspace
+- `GET /api/media/:id` - Get media item by ID
+- `POST /api/media` - Create new media item
+- `PUT /api/media/:id` - Update media item
+- `DELETE /api/media/:id` - Delete media item
 
----
+## License
 
-## ✅ Bonus Points (Nice-to-Haves)
-
-- Responsive layout
-- Clean component and state management
----
-
-## 📁 Sample Data
-
-- Mock data for initial development can be found in `/mock-data/`:
-
----
-
-## Stack Expectations
-
-- Frontend: Next.js + Tailwind + ShadCN
-- Backend: Node.js + Express
-- State: Redux Toolkit or local state
-- Data: Postgres or Use the provided JSON as mock data. Feel free to replicate
-
-## 🧪 How to Submit
-- Fork this repo (or clone and create a private one).
-- Complete the task.
-- Share your GitHub link or ZIP file with us via email.
-
-
-## ⏱️ Estimated Time
-- We recommend spending no more than 3–6 days total. You’re not expected to build everything — focus on clean, thoughtful implementation.
-
-
-## 🙌 Questions?
-If you’re stuck or unsure about any part of the task, feel free to reach out.
-
-Good luck, and have fun!
-– Team ADWrap
-
-Happy building 🚀
+MIT
