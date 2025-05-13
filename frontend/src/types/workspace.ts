@@ -3,19 +3,22 @@ export interface Workspace {
   name: string;
   email: string;
   location: string;
-  mediaItems: MediaItem[];
   createdAt: string;
   updatedAt: string;
+  mediaItems: MediaItem[];
 }
 
 export interface MediaItem {
   id: number;
-  customId: string;
-  type: MediaType;
   name: string;
+  type: 'STATIC_BILLBOARD' | 'STREET_POLE';
+  location: string;
+  dimensions: {
+    width: number;
+    height: number;
+  };
+  status: 'ACTIVE' | 'INACTIVE';
   workspaceId: number;
-  faces?: StaticMediaFace[];
-  routes?: Route[];
   createdAt: string;
   updatedAt: string;
 }

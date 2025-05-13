@@ -1,110 +1,81 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+'use client';
+
 import { Workspace } from '@/types/workspace';
-import { workspaceService } from '@/services/workspaceService';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Building2, Mail, MapPin } from 'lucide-react';
 
 interface WorkspaceDetailProps {
-  id: number;
+  workspace: Workspace;
 }
 
-export function WorkspaceDetail({ id }: WorkspaceDetailProps) {
-  const [workspace, setWorkspace] = useState<Workspace | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchWorkspace = async () => {
-      try {
-        const data = await workspaceService.getById(id);
-        setWorkspace(data);
-      } catch (err) {
-        setError('Failed to fetch workspace');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWorkspace();
-  }, [id]);
-
-  const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this workspace?')) {
-      return;
-    }
-
-    try {
-      await workspaceService.delete(id);
-      router.push('/workspaces');
-    } catch (err) {
-      setError('Failed to delete workspace');
-      console.error(err);
-    }
-  };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
-  if (!workspace) {
-    return <div>Workspace not found</div>;
-  }
-
+export function WorkspaceDetail({ workspace }: WorkspaceDetailProps) {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">{workspace.name}</h1>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => router.push(`/workspaces/${id}/edit`)}
-          >
-            Edit
-          </Button>
-          <Button variant="destructive" onClick={handleDelete}>
-            Delete
-          </Button>
-        </div>
-      </div>
+      {/* Basic Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Workspace Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Building2 className="h-4 w-4" />
+                <span>Name</span>
+              </div>
+              <p className="font-medium">{workspace.name}</p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Mail className="h-4 w-4" />
+                <span>Email</span>
+              </div>
+              <p className="font-medium">{workspace.email}</p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <MapPin className="h-4 w-4" />
+                <span>Location</span>
+              </div>
+              <p className="font-medium">{workspace.location}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="p-4 border rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Details</h2>
-          <p className="text-gray-600">
-            <span className="font-medium">Email:</span> {workspace.email}
-          </p>
-          <p className="text-gray-600">
-            <span className="font-medium">Location:</span> {workspace.location}
-          </p>
-        </div>
-
-        <div className="p-4 border rounded-lg">
-          <h2 className="text-lg font-semibold mb-2">Media Items</h2>
+      {/* Media Items */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Media Items</CardTitle>
+        </CardHeader>
+        <CardContent>
           {workspace.mediaItems.length === 0 ? (
-            <p className="text-gray-600">No media items yet</p>
+            <p className="text-muted-foreground">No media items found</p>
           ) : (
-            <ul className="space-y-2">
+            <ul className="space-y-4">
               {workspace.mediaItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="p-2 border rounded hover:bg-gray-50"
-                >
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-sm text-gray-600">
-                    {item.type} - {item.customId}
-                  </p>
+                <li key={item.id} className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {item.type} - {item.location}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      item.status === 'ACTIVE' 
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                    }`}>
+                      {item.status}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 } 
